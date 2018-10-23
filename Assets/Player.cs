@@ -7,24 +7,18 @@ public class Player : MonoBehaviour
 {
 	Rigidbody2D rigid;
 
-	/// <summary>
 	/// 何段階ジャンプできるか
-	/// </summary>
 	[SerializeField]
 	uint maxJumpSteps = 1;
 
-	/// <summary>
 	/// 現在何段階目のジャンプか
-	/// </summary>
 	uint jumpCount = 0;
 
 	void Start()
 	{
 		rigid = GetComponent<Rigidbody2D> ();
 	}
-
-	//本来はUpdateの中ではなく、FixedUpdateの中で速度を変更する
-	//入力周りはUpdateの中で取得する
+		
 	void Update()
 	{
 		Move ();
@@ -42,9 +36,6 @@ public class Player : MonoBehaviour
 			rigid.AddForce (Vector2.left * 3.0f);
 		else
 			rigid.velocity = new Vector2 (0.0f,rigid.velocity.y);
-
-		if (rigid.velocity.x > 3.0f)
-			rigid.velocity = new Vector2 (3.0f, rigid.velocity.y);
 	}
 
 	//ジャンプ処理
@@ -74,11 +65,11 @@ public class Player : MonoBehaviour
 			Vector2 dir = contact.point - (Vector2)transform.position;
 
 			//接触しているゲームオブジェクトの下向きのベクトル
-			Vector2 contactObjectUp = -contact.collider.gameObject.transform.up;
+			Vector2 contactObjectDown = -contact.collider.gameObject.transform.up;
 
 			//接触しているオブジェクトの下向きのベクトルと自身から接触しているポイントへのベクトルの
 			//角度が１０度未満であった場合にジャンプの段階数のリセットする
-			if (Vector2.Angle (contactObjectUp, dir) < 10.0f)
+			if (Vector2.Angle (contactObjectDown, dir) < 10.0f)
 				jumpCount = 0;
 
 			break;
